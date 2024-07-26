@@ -71,7 +71,8 @@ let
           esp-idf-monitor
           esp-idf-size
           esp-idf-panic-decoder
-
+          esp-idf-nvs-partition-gen
+          pyclang
           freertos_gdb
 
           # The esp idf vscode extension seems to want pip, too
