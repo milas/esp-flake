@@ -1,9 +1,11 @@
-{ pkgs ? import ../default.nix }:
+{ pkgs ? import ../default.nix  }:
 pkgs.mkShell {
   name = "esp-idf";
 
   buildInputs = with pkgs; [
-    esp-idf-esp32s2
+    esp-idf-esp32s3
+    # esp-idf
+    # esptool
 
     # Tools required to use ESP-IDF.
     git
@@ -25,17 +27,24 @@ pkgs.mkShell {
     llvm-xtensa-lib
     rust-xtensa
 
-    espflash
-    ldproxy
+    rust-ldproxy
+    rust-cargo-espflash
 
+    # pythonEnv.python
+    # (python3.withPackages (p: with p; [pip]))
     python3
     python3Packages.pip
     python3Packages.virtualenv
+    # stdenv.cc.cc.lib
+    # zlib
+    # libxml2
   ];
   shellHook = ''
     # fixes libstdc++ issues and libgl.so issues
+    # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.zlib}/lib:${pkgs.pkgsi686Linux.libxml2.dev}/lib
     export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.libxml2 pkgs.zlib pkgs.stdenv.cc.cc.lib ]}
     export ESP_IDF_VERSION=v5.3
+    # export LIBCLANG_PATH=${pkgs.llvmPackages.libclang.lib}/lib
     export LIBCLANG_PATH=${pkgs.llvm-xtensa-lib}/lib
     export RUSTFLAGS="--cfg espidf_time64"
   '';
