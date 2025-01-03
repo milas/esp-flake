@@ -221,4 +221,41 @@ with pythonPackages; rec {
       homepage = "https://github.com/espressif/esp-idf-panic-decoder";
     };
   };
+
+  esp-idf-nvs-partition-gen = buildPythonPackage rec {
+    pname = "esp-idf-nvs-partition-gen";
+    version = "0.1.6";
+
+    format = "pyproject";
+
+    src = fetchPypi {
+      pname = "esp_idf_nvs_partition_gen";
+      inherit version;
+
+      sha256 = "sha256-511QNGnWJun37fOcH+A923mXM4YDWw/E0kppnNcdiJQ=";
+    };
+
+    propagatedBuildInputs = [
+      setuptools
+      cryptography
+    ];
+
+    doCheck = false;
+
+    meta = {
+      homepage = "https://github.com/espressif/esp-idf-nvs-partition-gen";
+    };
+  };
+
+  pyclang = buildPythonPackage rec {
+    pname = "pyclang";
+    version = "0.6.0";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-G+Y24AiTOpjLg+eQGAT/CTCK0/vomqjNZloXTmWqRQM=";
+    };
+
+    doCheck = false;
+  };
 }
