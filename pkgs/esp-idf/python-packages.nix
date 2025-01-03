@@ -1,17 +1,14 @@
 # Versions based on
-# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.1.txt
-# on 2023-07-05.
-
-{ stdenv
-, lib
-, fetchPypi
-, fetchFromGitHub
-, pythonPackages
+# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.3.txt
+# on 2025-01-02.
+{
+  stdenv,
+  lib,
+  fetchPypi,
+  fetchFromGitHub,
+  pythonPackages,
 }:
-
-with pythonPackages;
-
-rec {
+with pythonPackages; rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
     version = "1.3.2";
@@ -25,28 +22,30 @@ rec {
 
     # For some reason, this 404s.
     /*
-      src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-12ozmQ4Eb5zL4rtNHSFjEynfObUkYlid1PgMDVmRkwY=";
-      };
+    src = fetchPypi {
+    inherit pname version;
+    sha256 = "sha256-12ozmQ4Eb5zL4rtNHSFjEynfObUkYlid1PgMDVmRkwY=";
+    };
     */
 
     doCheck = false;
 
-    propagatedBuildInputs = [
-      cachecontrol
-      cffi
-      click
-      colorama
-      packaging
-      pyyaml
-      requests
-      requests-file
-      requests-toolbelt
-      schema
-      six
-      tqdm
-    ] ++ cachecontrol.optional-dependencies.filecache;
+    propagatedBuildInputs =
+      [
+        cachecontrol
+        cffi
+        click
+        colorama
+        packaging
+        pyyaml
+        requests
+        requests-file
+        requests-toolbelt
+        schema
+        six
+        tqdm
+      ]
+      ++ cachecontrol.optional-dependencies.filecache;
 
     # setup.py says it needs these deps, but it actually doesn't. contextlib2
     # isn't supported on some pythons and urllib3 is pinned to an old version
@@ -62,11 +61,16 @@ rec {
 
   esp-coredump = buildPythonPackage rec {
     pname = "esp-coredump";
-    version = "1.5.2";
+    version = "1.12.0";
+
+    pyproject = true;
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-hQkXnGoAXCLk/PV7Y+C0hOgXGRY77zbIp2ZDC0cxfLo=";
+      sha256 = "sha256-s/JKD9PwcU7OZ3x4U4ScCRILvc1Ors0hkXHiRV+R+tg=";
     };
 
     doCheck = false;
@@ -84,11 +88,11 @@ rec {
 
   esptool = buildPythonPackage rec {
     pname = "esptool";
-    version = "4.6.2";
+    version = "4.8.1";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-VJ75Pu9C7n6UYs5aU8Ft96DHHZGz934Z7BV0mATN8wA=";
+      sha256 = "sha256-3E7ya2WeGo3LAZFHwOptlJgLNN6Z++CRIceUHIslRTE=";
     };
 
     doCheck = false;
@@ -109,11 +113,17 @@ rec {
 
   esp-idf-kconfig = buildPythonPackage rec {
     pname = "esp-idf-kconfig";
-    version = "1.1.0";
+    version = "2.4.1";
+
+    pyproject = true;
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-s8ZXt6cf5w2pZSxQNIs/SODAUvHNgxyQ+onaCa7UbFA=";
+      inherit version;
+      pname = "esp_idf_kconfig";
+      sha256 = "sha256-GObE8PZlSNy4wWb/HhgJ1hZJrD0dGUzzgB72wKwcnVo=";
     };
 
     doCheck = false;
@@ -151,11 +161,11 @@ rec {
 
   esp-idf-size = buildPythonPackage rec {
     pname = "esp-idf-size";
-    version = "0.3.1";
+    version = "1.6.1";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-OzthhzKGjyqDJrmJWs4LMkHz0rAwho+3Pyc2BYFK0EU=";
+      sha256 = "sha256-Oki21JiHiS7PzfIj/uQXSjc1KArRKBEDDLRvpQqBI/o=";
     };
 
     doCheck = false;
@@ -190,20 +200,21 @@ rec {
 
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
-    version = "0.2.0";
+    version = "1.2.1";
 
     format = "pyproject";
-    
+
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_panic_decoder";
-      sha256 = "sha256-t1pg+L7WWVoVZ7weE/CUdMJsgRQvLEUE/GVeJpt0kKI=";
+      sha256 = "sha256-hC8Rje/yMj5qyY8hgErviR4WV3hC0vNCdCQboKXVTYI=";
     };
 
     doCheck = false;
 
     propagatedBuildInputs = [
       setuptools
+      pyelftools
     ];
 
     meta = {
@@ -211,4 +222,3 @@ rec {
     };
   };
 }
-

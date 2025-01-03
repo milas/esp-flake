@@ -1,42 +1,38 @@
-{ version ? "17.0.1_20240419"
-, hash ? "sha256-oOEVonjgssLp9qhrHrEwlNQpXOB18LnUgUUe5RlU6Sw="
-, stdenv
-, lib
-, fetchurl
-, makeWrapper
-, buildFHSUserEnv
-}:
-
-let
+{
+  version ? "18.1.2_20240912",
+  hash ? "sha256-z9b8tB1tNlHj5727N9DgtpG0PmgN/0yZjPd/fk7NBcU=",
+  stdenv,
+  lib,
+  fetchurl,
+  makeWrapper,
+  buildFHSUserEnv,
+}: let
   fhsEnv = buildFHSUserEnv {
     name = "xtensa-toolchain-env";
-    targetPkgs = pkgs: with pkgs; [ zlib libxml2 ];
+    targetPkgs = pkgs: with pkgs; [zlib libxml2];
     runScript = "";
   };
 in
+  assert stdenv.system == "x86_64-linux";
+    stdenv.mkDerivation rec {
+      pname = "xtensa-llvm-toolchain";
+      inherit version;
+      src = fetchurl {
+        url = "https://github.com/espressif/llvm-project/releases/download/esp-${version}/libs-clang-esp-${version}-x86_64-linux-gnu.tar.xz";
+        inherit hash;
+      };
 
-assert stdenv.system == "x86_64-linux";
+      buildInputs = [makeWrapper];
 
-stdenv.mkDerivation rec {
-  pname = "xtensa-llvm-toolchain";
-  inherit version;
-  src = fetchurl {
-    url = "https://github.com/espressif/llvm-project/releases/download/esp-${version}/libs-clang-esp-${version}-x86_64-linux-gnu.tar.xz";
-    inherit hash;
-  };
+      phases = ["unpackPhase" "installPhase"];
 
-  buildInputs = [ makeWrapper ];
+      installPhase = ''
+        cp -r . $out
+      '';
 
-  phases = [ "unpackPhase" "installPhase" ];
-
-  installPhase = ''
-    cp -r . $out
-  '';
-
-  meta = with lib; {
-    description = "Xtensa LLVM tool chain libraries";
-    homepage = "https://github.com/espressif/llvm-project";
-    license = licenses.gpl3;
-  };
-}
-
+      meta = with lib; {
+        description = "Xtensa LLVM tool chain libraries";
+        homepage = "https://github.com/espressif/llvm-project";
+        license = licenses.gpl3;
+      };
+    }
