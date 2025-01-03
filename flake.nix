@@ -30,9 +30,6 @@
           esp-idf-esp32s3
           esp-idf-esp32c6
           esp-idf-esp32h2
-          gcc-xtensa-lx106-elf-bin
-          crosstool-ng-xtensa
-          gcc-xtensa-lx106-elf
           espflash
           ldproxy
           llvm-xtensa
