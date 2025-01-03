@@ -129,7 +129,10 @@ with pythonPackages; rec {
     doCheck = false;
 
     propagatedBuildInputs = [
+      argcomplete
       kconfiglib
+      intelhex
+      rich
     ];
 
     meta = {
