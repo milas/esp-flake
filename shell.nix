@@ -35,7 +35,7 @@ pkgs.mkShell {
   shellHook = ''
     # fixes libstdc++ issues and libgl.so issues
     export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [pkgs.libxml2 pkgs.zlib pkgs.stdenv.cc.cc.lib]}
-    export ESP_IDF_VERSION=v4.4.1
+    export ESP_IDF_VERSION=${pkgs.esp-idf-full.version}
     export LIBCLANG_PATH=${pkgs.llvm-xtensa-lib}/lib
     export RUSTFLAGS="--cfg espidf_time64"
   '';
